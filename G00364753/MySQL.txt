@@ -1,0 +1,17 @@
+/* 4.1.1 - note change delimeter before defining function */
+
+CREATE PROCEDURE get_ppl_visited_country(countryVis VARCHAR(52))
+DETERMINISTIC
+BEGIN
+select
+	  hv.personId as personID,
+    pe.personname as personName,
+    ci.name as cityName,
+    hv.dateArrived as dateArrived,
+    co.name as countryName
+ from hasvisitedcity hv 
+ left join person pe on hv.PersonID = pe.PersonID
+ left join city ci on hv.cityID = ci.ID 
+ left join country co on ci.CountryCode = co.Code
+ where co.Name like CONCAT('%', countryVis, '%');
+ END;
