@@ -1,17 +1,99 @@
-/* 4.1.1 - note change delimeter before defining function */
+/* 4.1.1 - note change delimeter before defining procedure */
 
 CREATE PROCEDURE get_ppl_visited_country(countryVis VARCHAR(52))
 DETERMINISTIC
 BEGIN
-select
-	  hv.personId as personID,
+SELECT
+    hv.personId as personID,
     pe.personname as personName,
     ci.name as cityName,
     hv.dateArrived as dateArrived,
     co.name as countryName
- from hasvisitedcity hv 
- left join person pe on hv.PersonID = pe.PersonID
- left join city ci on hv.cityID = ci.ID 
- left join country co on ci.CountryCode = co.Code
- where co.Name like CONCAT('%', countryVis, '%');
+ FROM hasvisitedcity hv 
+ LEFT JOIN person pe on hv.PersonID = pe.PersonID
+ LEFT JOIN city ci on hv.cityID = ci.ID 
+ LEFT JOIN country co on ci.CountryCode = co.Code
+ WHERE co.Name like CONCAT('%', countryVis, '%');
  END;
+
+/* 4.1.2 - note change delimiter before defining function*/
+CREATE FUNCTION ren_continent(continent VARCHAR(20))
+RETURNS VARCHAR(20)
+DETERMINISTIC
+BEGIN
+	IF continent = 'North America' THEN
+		RETURN 'Americas';
+	ELSEIF continent = 'South America' THEN
+		RETURN 'Americas';
+        ELSEIF continent = 'Oceania' THEN
+		RETURN 'Australia';
+	ELSEIF continent = 'Antarctica' THEN
+		RETURN 'South Pole';
+	ELSE
+		RETURN continent;
+	END IF;
+END
+
+/* 4.1.3 */
+
+SELECT 
+   continent, 
+   name, 
+   population 
+FROM 
+   country
+WHERE 
+   population IN 
+   (SELECT MAX(population) 
+    FROM country 
+   GROUP BY continent)
+ AND population > 0;  
+
+/* 4.1.4 */
+
+SELECT 
+	ci.name 
+FROM 
+	hasvisitedcity hv
+JOIN 
+	city ci ON hv.cityID = ci.ID
+JOIN 
+	person pe ON hv.personID = pe.personID
+WHERE 	ci.population = (
+	  SELECT
+	    MIN(ci.population)
+	  FROM hasvisitedcity hv
+	  JOIN city ci on hv.cityID = ci.ID
+	  JOIN person pe on hv.personID = pe.personID
+	  WHERE pe.age = (select min(age) from person)
+	  GROUP BY pe.personname)
+AND 
+	pe.age = (
+    	  SELECT 
+	    MIN(age) 
+	  FROM person);
+
+/* 4.1.5 */
+
+UPDATE city 
+SET Population = CASE 
+    WHEN District = 'Eastern Cape' THEN Population + 1000
+    WHEN District = 'Free State' THEN Population + 2000
+    WHEN District = 'Western Cape' THEN Population - 10000
+    ELSE Population    
+END
+WHERE CountryCode = 'ZAF';
+
+/* 4.1.5 */
+
+SELECT 	
+    name, 
+    indepYear,
+    CASE 	
+	WHEN year(curdate()) - indepYear <10 THEN CONCAT('New ', IF(population > 100000000, "Large ", "pl"), GovernmentForm)
+	WHEN year(curdate()) - indepYear between 10 AND 49 THEN CONCAT('Modern ', IF(population > 100000000, "Large ", ""), GovernmentForm)
+        WHEN year(curdate()) - indepYear between 50 AND 100 THEN CONCAT('Early ', IF(population > 100000000, "Large ", ""), GovernmentForm)
+	WHEN year(curdate()) - indepYear > 100 THEN CONCAT('Old ',IF(population > 100000000, "Large ", ""), GovernmentForm)
+	ELSE 'n/a'    
+    END as "Desc"
+FROM country;
