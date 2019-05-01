@@ -1,0 +1,40 @@
+/* Mongo DB */
+/* Question 4.3.1 */
+db.docs.aggregate([{
+	$group : {
+		_id: null, 
+		"Average Engine Size":{
+			$avg:"$car.engineSize"}
+			}
+		}
+])
+
+/* Question 4.3.2 */
+db.docs.aggregate([{
+	$bucket:{
+		groupBy: "$pop",
+		boundaries: [ 0, 50000, 100000, 150000],
+		default: "Other", 
+		output: {
+			"counties" : {$push: "$name" }
+			}
+		}
+}])
+
+/* Question 4.3.3 */
+
+db.docs.aggregate([
+	{$project:{
+		_id: 1, 
+		name: 1,
+		pop:{
+			$cond: { 
+			if: { $gte: [ "$pop", 100000 ] }, 
+			then: "Big County", 
+			else: "Small County" 
+			}
+		    }
+		}
+	},
+	{$match:{name:{$exists:true}}} 
+])

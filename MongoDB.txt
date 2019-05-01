@@ -1,3 +1,0 @@
-/* Mongo DB */
-/* Question 4.3.1 */
-db.docs.aggregate([{$group : {_id: null, "Average Engine Size":{$avg:"$car.engineSize"}}}])
