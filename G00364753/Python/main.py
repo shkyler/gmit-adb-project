@@ -6,10 +6,14 @@ def return_15():
   ## query the database
   cities = dbConnect.get_15_cities()
   ## format the output
+  print("View 15 Cities")
+  print("--------------")
   for city in cities:
     print(city["ID"],'|',city["Name"], '|', city["CountryCode"], '|', city["District"], '|', city["Population"])
 
 def return_city_pop():
+  print("View Cities by Population")
+  print("-------------------------")  
   ## defined the allowed operators
   allowed_operator = ['<','>','=']
   ## use a while loop to validate user input of the operator
@@ -24,12 +28,37 @@ def return_city_pop():
       break
     except ValueError as e:
       ## if a number is not entered - warn the user and start again
-      print("ERROR - you must enter a number, please try again")
+      print("**ERROR - you must enter a number, please try again**")
       main()
   ## format the output
   for city in cities:
     print(city["ID"],'|',city["Name"], '|', city["CountryCode"], '|', city["District"], '|', city["Population"])
 
+def new_city():
+  print("Add New City")
+  print("------------")
+  ## use a while loop until valid city data is entered
+  while True:
+    try:  
+       ## get user input for the new city
+      city_name = input("Enter city name: ")
+      count_code = input("Country Code: ")
+      dist_name = input("District: ")
+      pop = int(input("Population: "))
+      ## enter the data in the database  
+      dbConnect.add_city(city_name, count_code, dist_name, pop)
+      ## if the data is good, break from the while loop
+      break
+    ## catch errors related to the population being entered wrong  
+    except ValueError:
+      print("**ERROR - You must enter an integer for populaiton, please try again**") 
+    ## catch errors related to the country code being entered wrong   
+    except pymysql.err.IntegrityError as e:
+      print("**ERROR - You must enter a valid Country Code, please try again**")  
+    ## catch any other error  
+    except Exception as e:
+      print("**ERROR - ", e, "**")   
+     
 ## main function acts as a user interface
 def main():
   # print the main menu to the console
@@ -56,7 +85,7 @@ def main():
     return_city_pop()
     main()
   elif choice == "3":  
-    print("You selected 3!")
+    new_city()
     main()
   elif choice == "4":  
     print("You selected 4!")

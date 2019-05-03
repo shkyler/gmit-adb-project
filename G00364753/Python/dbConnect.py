@@ -40,4 +40,20 @@ def cities_by_pop(operator, population):
     ## .. execute the query..
     cursor.execute(get,(population))
     ## .. and return the result
-    return cursor.fetchall()    
+    return cursor.fetchall()  
+
+def add_city(name, country_code, district, population):
+  # connect to the DB if not already
+  if not conn:
+    connect();
+  # define a query to add a city
+  add = ("INSERT INTO city (Name, CountryCode, District, Population) VALUES (%s, %s, %s, %s)")      
+  ## with the connection..
+  with conn:
+    # ...define a cursor ..
+    cursor = conn.cursor()
+    ## .. execute the query..
+    cursor.execute(add, (name, country_code, district, population))
+    ## .. and return the result
+    return cursor.fetchall()
+    
