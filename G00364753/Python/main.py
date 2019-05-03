@@ -29,14 +29,14 @@ def return_city_pop():
     except ValueError as e:
       ## if a number is not entered - warn the user and start again
       print("**ERROR - you must enter a number, please try again**")
-      main()
   ## format the output
+  print("------------------")
   for city in cities:
     print(city["ID"],'|',city["Name"], '|', city["CountryCode"], '|', city["District"], '|', city["Population"])
 
 def new_city():
   print("Add New City")
-  print("------------")
+  print("----------------------")
   ## use a while loop until valid city data is entered
   while True:
     try:  
