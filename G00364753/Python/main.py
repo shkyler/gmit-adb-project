@@ -1,6 +1,7 @@
 ## Patrick Moore - GMIT - G00364753 - Applied Databases Project
 import pymysql
 import dbConnect
+import dbMongo
 
 def return_15():
   ## query the database
@@ -58,6 +59,25 @@ def new_city():
     ## catch any other error  
     except Exception as e:
       print("**ERROR - ", e, "**")   
+
+def get_cars():
+  # use a while loop until valid data is entered
+  while True:
+    try:
+      engine_size = float(input("Enter engine size: ")) 
+      # run the query
+      cars = dbMongo.find_car(engine_size)
+      break
+    # catch error related to incorrect data type entry  
+    except ValueError as e:
+      print("**ERROR - You must enter a number for engine size**")  
+  print("----------------------------")
+  # loop through the returned data and print
+  for car in cars:
+    print(car["_id"], "|", car["car"]["reg"], "|", car["car"]["engineSize"],"|", car["addresses"])     
+
+ 
+
      
 ## main function acts as a user interface
 def main():
@@ -88,7 +108,7 @@ def main():
     new_city()
     main()
   elif choice == "4":  
-    print("You selected 4!")
+    get_cars()
     main()  
   elif choice == "5":  
     print("You selected 5!")
