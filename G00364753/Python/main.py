@@ -101,7 +101,7 @@ def new_car():
     # other exceptions will catch duplicate ID numbers  
     except Exception:
       print("**ERROR - You must specify a unique ID for the car**")  
-  # if sucessfull give the user some feedback    
+  # if sucessful give the user some feedback    
   print("New car entered with ID: ", car_id)   
  
 
