@@ -52,7 +52,7 @@ def new_city():
       break
     ## catch errors related to the population being entered wrong  
     except ValueError:
-      print("**ERROR - You must enter an integer for populaiton, please try again**") 
+      print("**ERROR - You must enter an integer for population, please try again**") 
     ## catch errors related to the country code being entered wrong   
     except pymysql.err.IntegrityError as e:
       print("**ERROR - You must enter a valid Country Code, please try again**")  
@@ -61,6 +61,8 @@ def new_city():
       print("**ERROR - ", e, "**")   
 
 def get_cars():
+  print("Show Cars by Engine Size")
+  print("------------------------")
   # use a while loop until valid data is entered
   while True:
     try:
@@ -74,8 +76,33 @@ def get_cars():
   print("----------------------------")
   # loop through the returned data and print
   for car in cars:
-    print(car["_id"], "|", car["car"]["reg"], "|", car["car"]["engineSize"],"|", car["addresses"])     
+    try:
+      # print the details of the car
+      print(car["_id"], "|", car["car"]["reg"], "|", car["car"]["engineSize"],"|", car["addresses"])  
+      # if no address is present in the record it throws a KeyError
+    except KeyError:
+      print(car["_id"], "|", car["car"]["reg"], "|", car["car"]["engineSize"])    
 
+
+def new_car():
+  print("Add New Car")
+  print("-----------")  
+  # use a while loop until valid data is entered
+  while True:
+    try:
+      car_id = input("Enter car ID: ")
+      car_reg = input("Enter car Registration: ")
+      engine_size = float(input("Enter car engine size: "))
+      dbMongo.add_car(car_id,car_reg,engine_size)
+      break
+    # ValueError will catch non-numeric engine sizes  
+    except ValueError as e:
+      print("**ERROR - You must enter a number for engine size**") 
+    # other exceptions will catch duplicate ID numbers  
+    except Exception:
+      print("**ERROR - You must specify a unique ID for the car**")  
+  # if sucessfull give the user some feedback    
+  print("New car entered with ID: ", car_id)   
  
 
      
@@ -111,7 +138,7 @@ def main():
     get_cars()
     main()  
   elif choice == "5":  
-    print("You selected 5!")
+    new_car()
     main()
   elif choice == "6":  
     print("You selected 6!")
