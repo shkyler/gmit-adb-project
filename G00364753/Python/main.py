@@ -3,7 +3,7 @@ import pymysql
 import dbConnect
 import dbMongo
 
-def return_15():
+def return_15_cities():
   ## query the database
   cities = dbConnect.get_15_cities()
   ## format the output
@@ -83,7 +83,6 @@ def get_cars():
     except KeyError:
       print(car["_id"], "|", car["car"]["reg"], "|", car["car"]["engineSize"])    
 
-
 def new_car():
   print("Add New Car")
   print("-----------")  
@@ -103,9 +102,58 @@ def new_car():
       print("**ERROR - You must specify a unique ID for the car**")  
   # if sucessful give the user some feedback    
   print("New car entered with ID: ", car_id)   
- 
 
-     
+# use a global variable to store the data from the country table in the world database
+countries = None
+
+def countries_by_name():
+  print("Get Country by Name: ")
+  print("---------------------")
+  # use the global countries variable in this function
+  global countries
+  # if countries is not defined - fetch the info from the database
+  if not countries:
+    countries = dbConnect.get_countries()
+  # ask the user for filter information
+  country_filter = input("Enter country name:")
+  # use a for loop and if statement to filter the country name data
+  for country in countries:
+    if country_filter in country["Name"]:
+      print(country["Code"], "|", country["Name"], "|", country["Continent"], "|", country["Population"], "|", country["HeadOfState"])  
+
+def countries_by_pop():
+  print("Get Country by Population: ")
+  print("---------------------")
+  # use the global countries variable in this function
+  global countries
+  # if countries is not defined - fetch the info from the database
+  if not countries:
+    countries = dbConnect.get_countries()
+  ## defined the allowed operators
+  allowed_operator = ['<','>','=']
+  ## use a while loop to validate user input of the operator
+  op_selected = input("Enter < > or = : ")
+  while op_selected not in allowed_operator:
+    op_selected = input("Enter < > or = : ")  
+  ## use error handling to make the user enters number  
+  while True:
+    try:  
+      pop_entered = int(input("Enter Population: "))
+      break
+    except ValueError:
+      print("**ERROR - You must enter an integer for population, please try again**")
+  # use a for loop and if statements to loop through the data base and filter it based on the user inputs    
+  for country in countries:
+    if op_selected == ">":
+      if int(country["Population"]) > pop_entered:
+        print(country["Code"], "|", country["Name"], "|", country["Continent"], "|", country["Population"], "|", country["HeadOfState"])     
+    elif op_selected == "<":
+      if int(country["Population"]) < pop_entered:
+        print(country["Code"], "|", country["Name"], "|", country["Continent"], "|", country["Population"], "|", country["HeadOfState"])
+    elif op_selected == "=":
+      if int(country["Population"]) == pop_entered:
+        print(country["Code"], "|", country["Name"], "|", country["Continent"], "|", country["Population"], "|", country["HeadOfState"])    
+
 ## main function acts as a user interface
 def main():
   # print the main menu to the console
@@ -126,7 +174,7 @@ def main():
   choice = input("Choice:")
   # check the user input and call the appropriate function
   if choice == "1":
-    return_15()
+    return_15_cities()
     main()
   elif choice == "2":  
     return_city_pop()
@@ -141,10 +189,10 @@ def main():
     new_car()
     main()
   elif choice == "6":  
-    print("You selected 6!")
+    countries_by_name()
     main()  
   elif choice == "7":  
-    print("You selected 7!")
+    countries_by_pop()
     main()  
   elif choice == "x":  
     quit()

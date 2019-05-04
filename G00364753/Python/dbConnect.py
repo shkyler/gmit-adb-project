@@ -5,7 +5,16 @@ conn = None
 def connect():
   ## use the global connection variable to connect
   global conn
-  conn = pymysql.connect(user="root", password="root", db="world", host="localhost", cursorclass=pymysql.cursors.DictCursor)
+  while True:
+    # ask the user for a username and password
+    try:
+      user_name = input("Please enter MySQL username: ")
+      user_pw = input("Please enter MySQL password: ")
+      conn = pymysql.connect(user=user_name, password=user_pw, db="world", host="localhost", cursorclass=pymysql.cursors.DictCursor)
+      break
+    # if username or password is incorrect, inform the user and try again  
+    except pymysql.err.OperationalError:
+      print("Incorrect username or password, please try again.")
 
 def get_15_cities():
   # connect to the DB if not already
@@ -56,4 +65,18 @@ def add_city(name, country_code, district, population):
     cursor.execute(add, (name, country_code, district, population))
     ## .. and return the result
     return cursor.fetchall()
-    
+
+def get_countries():
+  # connect to the DB if not already
+  if(not conn):
+    connect();
+  ## define a query
+  get = "SELECT * FROM country"
+  ## with the connection..
+  with conn:
+    ## ...define a cursor ..
+    cursor = conn.cursor()
+    ## .. execute the query..
+    cursor.execute(get)
+    ## .. and return the result
+    return cursor.fetchall()
