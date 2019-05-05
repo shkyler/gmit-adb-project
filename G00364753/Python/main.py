@@ -65,7 +65,7 @@ def new_city():
     except pymysql.err.IntegrityError as e:
       print("**ERROR - You must enter a valid Country Code, please try again**")  
     ## catch any other error  
-    except Exception:
+    except Exception as e:
       print("**ERROR - ", e, "**")   
 
 def get_cars():
