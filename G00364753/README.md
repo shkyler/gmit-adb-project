@@ -21,7 +21,7 @@ The dependencies for the Python Application are:
 
 Installation details for `pymysql` can be found <a href="https://pypi.org/project/PyMySQL/#installation">here</a>.
 
-Installation details for `pymongol` can be found <a href="https://api.mongodb.com/python/current/installation.html">here</a>.
+Installation details for `pymongo` can be found <a href="https://api.mongodb.com/python/current/installation.html">here</a>.
 
 ### Instructions for running the software
 
