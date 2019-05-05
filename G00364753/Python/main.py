@@ -9,8 +9,12 @@ def return_15_cities():
   ## format the output
   print("View 15 Cities")
   print("--------------")
+  # print a header row
+  print("City".ljust(4),"|","City Name".ljust(40), "|", "COU".ljust(3), "|", "District".ljust(40), "|", "Population".ljust(10),"|")
+  print("---------------------------------------------------------------------------------------------------------------")
+  # print the data
   for city in cities:
-    print(city["ID"],'|',city["Name"], '|', city["CountryCode"], '|', city["District"], '|', city["Population"])
+    print(str(city["ID"]).ljust(4),'|',city["Name"].ljust(40), '|', city["CountryCode"].ljust(3), '|', city["District"].ljust(40), '|', str(city["Population"]).rjust(10), "|")
 
 def return_city_pop():
   print("View Cities by Population")
@@ -27,13 +31,17 @@ def return_city_pop():
       pop_entered = int(input("Enter Population: "))
       cities = dbConnect.cities_by_pop(op_selected, pop_entered)
       break
-    except ValueError as e:
+    except ValueError:
       ## if a number is not entered - warn the user and start again
       print("**ERROR - you must enter a number, please try again**")
   ## format the output
   print("------------------")
+  # print a header row
+  print("City".ljust(4),"|","City Name".ljust(40), "|", "COU".ljust(3), "|", "District".ljust(40), "|", "Population".ljust(10),"|")
+  print("---------------------------------------------------------------------------------------------------------------")
+  # print the data
   for city in cities:
-    print(city["ID"],'|',city["Name"], '|', city["CountryCode"], '|', city["District"], '|', city["Population"])
+    print(str(city["ID"]).ljust(4),'|',city["Name"].ljust(40), '|', city["CountryCode"].ljust(3), '|', city["District"].ljust(40), '|', str(city["Population"]).rjust(10), "|")
 
 def new_city():
   print("Add New City")
@@ -57,7 +65,7 @@ def new_city():
     except pymysql.err.IntegrityError as e:
       print("**ERROR - You must enter a valid Country Code, please try again**")  
     ## catch any other error  
-    except Exception as e:
+    except Exception:
       print("**ERROR - ", e, "**")   
 
 def get_cars():
@@ -71,17 +79,20 @@ def get_cars():
       cars = dbMongo.find_car(engine_size)
       break
     # catch error related to incorrect data type entry  
-    except ValueError as e:
+    except ValueError:
       print("**ERROR - You must enter a number for engine size**")  
   print("----------------------------")
+  # print a header row
+  print("CarID".ljust(5),"|","Car Reg".ljust(14), "|", "Eng".ljust(3), "|", "Addresses".ljust(20), "|")
+  print("-----------------------------------------------------")
   # loop through the returned data and print
   for car in cars:
     try:
       # print the details of the car
-      print(car["_id"], "|", car["car"]["reg"], "|", car["car"]["engineSize"],"|", car["addresses"])  
+      print(str(car["_id"]).ljust(5), "|", car["car"]["reg"].ljust(14), "|", str(car["car"]["engineSize"]).ljust(3),"|", str(car["addresses"]).ljust(20), "|")  
       # if no address is present in the record it throws a KeyError
     except KeyError:
-      print(car["_id"], "|", car["car"]["reg"], "|", car["car"]["engineSize"])    
+      print(str(car["_id"]).ljust(5), "|", car["car"]["reg"].ljust(14), "|", str(car["car"]["engineSize"]).ljust(3),"|")    
 
 def new_car():
   print("Add New Car")
@@ -95,7 +106,7 @@ def new_car():
       dbMongo.add_car(car_id,car_reg,engine_size)
       break
     # ValueError will catch non-numeric engine sizes  
-    except ValueError as e:
+    except ValueError:
       print("**ERROR - You must enter a number for engine size**") 
     # other exceptions will catch duplicate ID numbers  
     except Exception:
@@ -116,10 +127,13 @@ def countries_by_name():
     countries = dbConnect.get_countries()
   # ask the user for filter information
   country_filter = input("Enter country name:")
+  # print a header row
+  print("COU".ljust(3),"|","Country Name".ljust(50), "|", "Continent".ljust(16), "|", "Population".ljust(12), "|", str("HeadOfState").ljust(35),"|")
+  print("----------------------------------------------------------------------------------------------------------------------------------")
   # use a for loop and if statement to filter the country name data
   for country in countries:
     if country_filter in country["Name"]:
-      print(country["Code"], "|", country["Name"], "|", country["Continent"], "|", country["Population"], "|", country["HeadOfState"])  
+      print(country["Code"].ljust(3), "|", country["Name"].ljust(50), "|", country["Continent"].ljust(16), "|", str(country["Population"]).rjust(12), "|", country["HeadOfState"].ljust(35), "|")  
 
 def countries_by_pop():
   print("Get Country by Population: ")
@@ -142,17 +156,20 @@ def countries_by_pop():
       break
     except ValueError:
       print("**ERROR - You must enter an integer for population, please try again**")
+  # print a header row
+  print("COU".ljust(3),"|","Country Name".ljust(50), "|", "Continent".ljust(16), "|", "Population".ljust(12), "|", "HeadOfState".ljust(35),"|")
+  print("----------------------------------------------------------------------------------------------------------------------------------")    
   # use a for loop and if statements to loop through the data base and filter it based on the user inputs    
   for country in countries:
     if op_selected == ">":
       if int(country["Population"]) > pop_entered:
-        print(country["Code"], "|", country["Name"], "|", country["Continent"], "|", country["Population"], "|", country["HeadOfState"])     
+        print(country["Code"].ljust(3), "|", country["Name"].ljust(50), "|", country["Continent"].ljust(16), "|", str(country["Population"]).rjust(12), "|", str(country["HeadOfState"]).ljust(35), "|")      
     elif op_selected == "<":
       if int(country["Population"]) < pop_entered:
-        print(country["Code"], "|", country["Name"], "|", country["Continent"], "|", country["Population"], "|", country["HeadOfState"])
+        print(country["Code"].ljust(3), "|", country["Name"].ljust(50), "|", country["Continent"].ljust(16), "|", str(country["Population"]).rjust(12), "|", str(country["HeadOfState"]).ljust(35), "|") 
     elif op_selected == "=":
       if int(country["Population"]) == pop_entered:
-        print(country["Code"], "|", country["Name"], "|", country["Continent"], "|", country["Population"], "|", country["HeadOfState"])    
+        print(country["Code"].ljust(3), "|", country["Name"].ljust(50), "|", country["Continent"].ljust(16), "|", str(country["Population"]).rjust(12), "|", str(country["HeadOfState"]).ljust(35), "|")     
 
 ## main function acts as a user interface
 def main():
