@@ -159,7 +159,7 @@ def countries_by_pop():
   # print a header row
   print("COU".ljust(3),"|","Country Name".ljust(50), "|", "Continent".ljust(16), "|", "Population".ljust(12), "|", "HeadOfState".ljust(35),"|")
   print("----------------------------------------------------------------------------------------------------------------------------------")    
-  # use a for loop and if statements to loop through the data base and filter it based on the user inputs    
+  # use a forloop and if statements to loop through the data base and filter it based on the user inputs    
   for country in countries:
     if op_selected == ">":
       if int(country["Population"]) > pop_entered:
