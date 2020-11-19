@@ -25,13 +25,13 @@ def get_15_cities():
   ## define a query
   get = "SELECT * FROM city LIMIT 15"
   ## with the connection..
-  with conn:
+  ##with conn:
     ## ...define a cursor ..
-    cursor = conn.cursor()
+  cursor = conn.cursor()
     ## .. execute the query..
-    cursor.execute(get)
+  cursor.execute(get)
     ## .. and return the result
-    return cursor.fetchall()
+  return cursor.fetchall()
 
 def cities_by_pop(operator, population):
   # connect to the DB if not already
@@ -45,13 +45,13 @@ def cities_by_pop(operator, population):
   elif operator == "=":
     get = "SELECT * FROM city WHERE population = %s"
   ## with the connection..
-  with conn:
-    # ...define a cursor ..
-    cursor = conn.cursor()
-    ## .. execute the query..
-    cursor.execute(get,(population))
-    ## .. and return the result
-    return cursor.fetchall()  
+  ##with conn:
+  # ...define a cursor ..
+  cursor = conn.cursor()
+  ## .. execute the query..
+  cursor.execute(get,(population))
+  ## .. and return the result
+  return cursor.fetchall()  
 
 def add_city(name, country_code, district, population):
   # connect to the DB if not already
@@ -60,13 +60,13 @@ def add_city(name, country_code, district, population):
   # define a query to add a city
   add = ("INSERT INTO city (Name, CountryCode, District, Population) VALUES (%s, %s, %s, %s)")      
   ## with the connection..
-  with conn:
-    # ...define a cursor ..
-    cursor = conn.cursor()
-    ## .. execute the query..
-    cursor.execute(add, (name, country_code, district, population))
-    ## .. and return the result
-    return cursor.fetchall()
+  ##with conn:
+  # ...define a cursor ..
+  cursor = conn.cursor()
+  ## .. execute the query..
+  cursor.execute(add, (name, country_code, district, population))
+  ## .. and return the result
+  return cursor.fetchall()
 
 def get_countries():
   # connect to the DB if not already
@@ -75,10 +75,10 @@ def get_countries():
   ## define a query
   get = "SELECT * FROM country"
   ## with the connection..
-  with conn:
-    ## ...define a cursor ..
-    cursor = conn.cursor()
-    ## .. execute the query..
-    cursor.execute(get)
-    ## .. and return the result
-    return cursor.fetchall()
+  ##with conn:
+  ## ...define a cursor ..
+  cursor = conn.cursor()
+  ## .. execute the query..
+  cursor.execute(get)
+  ## .. and return the result
+  return cursor.fetchall()
